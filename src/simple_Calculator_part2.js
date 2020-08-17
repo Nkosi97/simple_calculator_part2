@@ -1,66 +1,65 @@
-class Calculator {
+let LAST = 0;
+
+class Calc {
   constructor() {
-    this.lastNum = 0;
-    this.slot = [];
+    this.results = [];
+    this.memorySlots = [];
   }
 
-  add(...args) {
-    let sum = 0;
-
-    for (let num of args) {
-      if (num == 'Last') {
-        num = this.last();
-      } else if (num == 'slot_' + num.toString().charAt(num.length - 1)) {
-        sum += this.get_slot(num.charAt(num.length - 1));
-      } else if (!isNaN(num)) {
-        sum += num;
-      }
+  add() {
+    let sum = 0,
+      i;
+    for (i = 0; i < arguments.length; i++) {
+      if (arguments[i] == "LAST") {
+        sum += this.last();
+      } else if (
+        typeof arguments[i] === "string" &&
+        arguments[i].includes("SLOT_")) {
+        let pos = arguments[i].match(/\d+/g);
+        parseInt(pos);
+        sum += this.get_slot(pos);
+      } else
+        sum += arguments[i];
     }
-
-    this.slot.push(sum);
+    this.results.push(sum);
     return sum;
   }
 
-  multiply(...args) {
-    let product = 1;
+  multiply() {
+    let product = 1,
+      i;
 
-    for (let num of args) {
-      if (num == 'Last') {
-        num = this.last();
-      } else if (num == 'slot_' + num.toString().charAt(num.length - 1)) {
-        product *= this.get_slot(num.charAt(num.length - 1));
-      } else if (!isNaN(num)) {
-        product *= num;
-      }
+    for (i = 0; i < arguments.length; i++) {
+      if (arguments[i] == "LAST") {
+        product *= this.last();
+      } else if (
+        typeof arguments[i] === "string" &&
+        arguments[i].includes("SLOT_")) {
+        let pos = arguments[i].match(/\d+/g);
+        parseInt(pos);
+        product *= this.get_slot(pos);
+      } else
+        product *= arguments[i];
     }
-    
-    this.slot.push(product);
+    this.results.push(product);
     return product;
   }
-
+  
   last() {
-    return this.lastNum;
+    LAST = this.results[this.results.length - 1];
+    return LAST;
   }
 
-  set_slot(num) {
-    this.lastNum = this.slot[num - 1];
+  set_slot(num1) {
+    this.memorySlots.push(this.results[num1 - 1]);
   }
 
-  get_slot(num) {
-    return this.slot[num - 1];
+  get_slot(num1) {
+    return this.memorySlots[num1 - 1];
   }
-
 }
 
 
-const calc = new Calculator()
-
-
-console.log(calc.add(2,2))
-console.log(calc.add("LAST",2))
-console.log(calc.set_slot(3))
-
-module.exports = Calculator;
-
+module.exports = Calc;
   
 

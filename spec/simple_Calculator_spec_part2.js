@@ -1,38 +1,59 @@
-const Calculator = require("../src/simple_Calculator_part2")
-let calculator_instance = new Calculator
-describe('calculate the total', function() {
+describe("the calculations", () => {
+  beforeEach(function () {
+    global.Calc = require("../src/simple_Calculator_part2");
+    global.calculator = new Calc();
+  })
 
-  it('should display the sum', function() {
-    expect(calculator_instance.add(1, 2)).toBe(3);
+  //add function
+  it("should add two integers", () => {
+    expect(calculator.add(1, 2)).toBe(3);
   });
-
-  it('should return 10', function() {
-    expect(calculator_instance.multiply("LAST"), 5).toBe(10);
+  it("should add three or more integers", () => {
+    expect(calculator.add(1, 3, 5)).toBe(9);
   });
+});
 
-  it('should return 8', function() {
-    expect(calculator_instance.add(3, 5)).toBe(8);
+describe("the calculations", () => {
+  beforeEach(function () {
+    global.Calc = require("../src/simple_Calculator_part2");
+    global.calculator = new Calc();
+  });
+  //multiply function
+  it("should multiply two integers", () => {
+    expect(calculator.multiply(6, 2)).toBe(12);
+  });
+  it("should multiply two or more integers ", () => {
+    expect(calculator.multiply(6, 3, 2)).toBe(36);
+  });
+});
+
+// last, get && get_slot functions
+describe("various calculations (last, get_slot, Last, get_slot)", () => {
+  beforeEach(() => {
+    global.Calc = require("../src/simple_Calculator_part2");
+    global.calculator = new Calc();
   });
 
   
-  it('should return 60 ', function() {
-    expect(calculator_instance.multiply(30, 2)).toBe(60);
+  it("it should output the last results in the calculator", () => {
+    calculator.add(2, 3);
+    calculator.add(7, 13);
+    expect(calculator.last()).toBe(20);
   });
 
-  it('should give the product of the array', function() {
-    expect(calculator_instance.multiply(3,5,2)).toBe(10);
+  // set_slot
+  it("assigns a slot to the answer in the calculator", () => {
+    spyOn(calculator, "set_slot");
+    calculator.add(1, 4);
+    calculator.set_slot(1);
+    expect(calculator.set_slot).toHaveBeenCalledWith(1);
   });
 
-  //memory slots
-
-  it('Should take single number as slot number', function() {
-    calculator_instance.add(1, 2);
-    expect(calculator_instance.get_slot(1)).toEqual(9);
-  });
-
-  it('Should take slot number and add with a number', function() {
-    calculator_instance.add(5, 4);
-    calculator_instance.get_slot(1);
-    expect(calculator_instance.add('slot_2', 2)).toBe(60);
+  // get_slot
+  it("gets the answer from a specific slot", () => {
+    calculator.add(1, 20);
+    calculator.last();
+    calculator.set_slot(1);
+    expect(calculator.get_slot(1)).toBe(21);
   });
 });
